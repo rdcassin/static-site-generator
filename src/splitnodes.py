@@ -1,44 +1,104 @@
 from textnode import TextType, TextNode
+from extractmarkdown import extract_markdown_images, extract_markdown_links
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
-    new_nodes_list = []
-    for node in old_nodes:
-        if node.text_type != TextType.TEXT:
-            new_nodes = node
-        else:
-            new_nodes = create_new_nodes(node.text, delimiter, text_type)
-        new_nodes_list.append(new_nodes)
-    if len(old_nodes) == 1:
-        return new_nodes_list[0]
-    return new_nodes_list
-
-def create_new_nodes(node_text, delimiter, text_type):
-    open_delim = False
-    delim_counter = 0
     new_nodes = []
-    current_value = ""
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
 
-    for i in range(0,len(node_text)):
-        if node_text[i] == delimiter:
-            delim_counter += 1
-            if len(current_value) > 0:
-                new_node = create_new_node(open_delim, current_value, text_type)
-                new_nodes.append(new_node)
-                current_value = ""
-            open_delim = not open_delim
-        else:
-            current_value += node_text[i]
-            if i == len(node_text) - 1:
-                new_node = create_new_node(open_delim, current_value, text_type)
-                new_nodes.append(new_node)
-                current_value = ""
+        text = old_node.text
+        remaining_text= text
+
+        while delimiter in remaining_text:
+            split_result = remaining_text.split(delimiter, 1)
+            before = split_result[0]
+            
+            if before:
+                new_nodes.append(TextNode(before, TextType.TEXT))
+            
+            after_opening = split_result[1]
+            if delimiter not in after_opening:
+                raise Exception(f"Invalid Markdown syntax: missing closing delimiter {delimiter}")
+            
+            split_result = after_opening.split(delimiter, 1)
+            content = split_result[0]
+            remaining_text = split_result[1]
+            
+            new_nodes.append(TextNode(content, text_type))
+        
+        if remaining_text:
+            new_nodes.append(TextNode(remaining_text, TextType.TEXT))
     
-    if delim_counter % 2 == 0:
-        return new_nodes
-    raise Exception("invalid Markdown syntax")
+    return new_nodes
 
-def create_new_node(open_delim, current_value, text_type):
-    if open_delim:
-        return TextNode(current_value, text_type)
-    else:
-        return TextNode(current_value, TextType.TEXT)
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
+
+        delimiters = extract_markdown_images(old_node.text)
+        text = old_node.text
+        remaining_text = text
+
+        for delimiter in delimiters:
+            alt_text, url = delimiter
+            split_result = remaining_text.split(f"![{alt_text}]({url})", 1)
+            text_before = split_result[0]
+            
+            if text_before:
+                new_nodes.append(TextNode(text_before, TextType.TEXT))
+            
+            remaining_text = split_result[1]
+            
+            new_nodes.append(TextNode(alt_text, TextType.IMAGE, url))
+        
+        if remaining_text:
+            new_nodes.append(TextNode(remaining_text, TextType.TEXT))
+    
+    return new_nodes
+
+def split_nodes_link(old_nodes):
+    new_nodes = []
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
+
+        delimiters = extract_markdown_links(old_node.text)
+        text = old_node.text
+        remaining_text = text
+
+        for delimiter in delimiters:
+            alt_text, url = delimiter
+            split_result = remaining_text.split(f"[{alt_text}]({url})", 1)
+            text_before = split_result[0]
+            
+            if text_before:
+                new_nodes.append(TextNode(text_before, TextType.TEXT))
+            
+            remaining_text = split_result[1]
+            
+            new_nodes.append(TextNode(alt_text, TextType.LINK, url))
+        
+        if remaining_text:
+            new_nodes.append(TextNode(remaining_text, TextType.TEXT))
+    
+    return new_nodes
+
+def text_to_textnodes(text):
+    input_node = TextNode(text, TextType.TEXT)
+    current_node = [input_node]
+    text_types = [("**", TextType.BOLD), ("_", TextType.ITALIC), ("`", TextType.CODE),]
+    for text_type in text_types:
+        altered_node = split_nodes_delimiter(current_node, text_type[0], text_type[1])
+        current_node = altered_node
+    altered_node = split_nodes_image(current_node)
+    current_node = altered_node
+    altered_node = split_nodes_link(current_node)
+    current_node = altered_node
+
+    return current_node

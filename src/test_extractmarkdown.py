@@ -8,3 +8,6 @@ class TestExtractMarkdownText(unittest.TestCase):
         link_extract = extract_markdown_links("This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)")
         self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], img_extract)
         self.assertListEqual([("to boot dev", "https://www.boot.dev"), ("to youtube", "https://www.youtube.com/@bootdotdev")], link_extract)
+        
+if __name__ == "__main__":
+    unittest.main()

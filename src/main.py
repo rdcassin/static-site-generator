@@ -4,8 +4,8 @@ import shutil
 def prepare_public_directory(public_dir):
     """Clear and recreate the public directory."""
     if os.path.exists(public_dir):
-        shutil.rmtree(public_dir)  # Remove the existing directory
-    os.mkdir(public_dir)  # Create a fresh directory
+        shutil.rmtree(public_dir)
+    os.mkdir(public_dir)
 
 def map_static_files(directory, static_dir, public_dir):
     """Recursively map and copy files from static_dir to public_dir."""
@@ -20,17 +20,17 @@ def map_static_files(directory, static_dir, public_dir):
         dest_path = os.path.join(public_dir, rel_path)
 
         if os.path.isfile(current_path):
-            # Copy file to destination
             shutil.copy(current_path, dest_path)
-            files_map.append(dest_path)  # Track copied files
+            files_map.append(dest_path)
         else:
-            # Create directory before recursion
             os.makedirs(dest_path, exist_ok=True)
-            files_map.extend(map_static_files(current_path, static_dir, public_dir))  # Recurse on subdirs
+            files_map.extend(map_static_files(current_path, static_dir, public_dir))
     return files_map
 
+# def generate_page(from_path, template_path, dest_path):
+    
+
 def main():
-    # Dynamically calculate paths based on script location
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     static_dir = os.path.join(project_root, "static")
     public_dir = os.path.join(project_root, "public")
@@ -39,10 +39,8 @@ def main():
     print("Static Directory:", static_dir)
     print("Public Directory:", public_dir)
 
-    # Prepare the public directory
     prepare_public_directory(public_dir)
 
-    # Recursively map and copy files
     files = map_static_files(static_dir, static_dir, public_dir)
 
     print("Copied files:", files)

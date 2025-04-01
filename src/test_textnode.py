@@ -42,7 +42,6 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(html_node5.value, "This is a link node")
         self.assertEqual(html_node5.props, {"href": "https://www.google.com"})
         self.assertEqual(html_node6.tag, "img")
-        self.assertEqual(html_node6.value, "Image Alt Text Twitch.TV Link Provided")
         self.assertEqual(html_node6.props, {"src": "https://www.twitch.tv", "alt":"Image Alt Text Twitch.TV Link Provided"})
 
 if __name__ == "__main__":

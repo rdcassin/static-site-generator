@@ -4,7 +4,7 @@ from textnode import TextType, TextNode
 from splitnodes import split_nodes_delimiter, split_nodes_image, split_nodes_link, text_to_textnodes
 
 class TestSplitNodes(unittest.TestCase):
-    def test_eq(self):
+    def test_split_nodes_delimiter(self):
         node = TextNode("`code block` This is text with a word", TextType.TEXT)
         new_node = split_nodes_delimiter([node], "`", TextType.CODE)
         node_result = [

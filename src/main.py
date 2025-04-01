@@ -2,13 +2,11 @@ import os
 import shutil
 
 def prepare_public_directory(public_dir):
-    """Clear and recreate the public directory."""
     if os.path.exists(public_dir):
         shutil.rmtree(public_dir)
     os.mkdir(public_dir)
 
 def map_static_files(directory, static_dir, public_dir):
-    """Recursively map and copy files from static_dir to public_dir."""
     if not os.path.exists(directory):
         print(f"Error: '{directory}' directory does not exist.")
         return []
@@ -26,10 +24,7 @@ def map_static_files(directory, static_dir, public_dir):
             os.makedirs(dest_path, exist_ok=True)
             files_map.extend(map_static_files(current_path, static_dir, public_dir))
     return files_map
-
-# def generate_page(from_path, template_path, dest_path):
     
-
 def main():
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     static_dir = os.path.join(project_root, "static")

@@ -91,7 +91,7 @@ def markdown_to_html_node(markdown):
         
         nodes.append(block_node)
     
-    parent_node = ParentNode("div", nodes, None)
+    parent_node = HTMLNode("div", None, nodes, None)
 
     return parent_node
 
@@ -107,7 +107,7 @@ def text_to_children(text):
 
 def paragraph_to_html_node(block):
     children = text_to_children(block)
-    return ParentNode("p", children, None)
+    return HTMLNode("p", None, children, None)
 
 def heading_to_html_node(block):
     split_block = block.split()
@@ -121,12 +121,12 @@ def heading_to_html_node(block):
     content = block[level:].strip()
     
     children = text_to_children(content)
-    return ParentNode(f"h{level}", children, None)
+    return HTMLNode(f"h{level}", None, children, None)
 
 def code_to_html_node(block):
     content = block.strip("`").strip()
 
-    return ParentNode("pre", [LeafNode("code", content, None)], None)
+    return HTMLNode("pre", None, [HTMLNode("code", content, None, None)], None)
 
 def unordered_list_to_html_node(block):
     items = block.split("\n")
@@ -135,9 +135,9 @@ def unordered_list_to_html_node(block):
         if item:
             stripped_item = item.lstrip("- ")
             content = text_to_children(stripped_item.strip())
-            child = LeafNode("li", content, None)
+            child = HTMLNode("li", content, None, None)
             children.append(child)
-    return ParentNode("ul", children, None)
+    return HTMLNode("ul", None, children, None)
 
 def ordered_list_to_html_node(block):
     items = block.split("\n")
@@ -146,9 +146,9 @@ def ordered_list_to_html_node(block):
         if item:
             split_item = item.split(" ", 1)
             content = text_to_children(split_item[1].strip())
-            child = LeafNode("li", content, None)
+            child = HTMLNode("li", content, None, None)
             children.append(child)
-    return ParentNode("ol", children, None)
+    return HTMLNode("ol", None, children, None)
 
 def quote_to_html_node(block):
     lines = block.split("\n")
@@ -159,4 +159,4 @@ def quote_to_html_node(block):
             child_nodes = text_to_children(clean_line)
             children.extend(child_nodes)
 
-    return ParentNode("blockquote", children, None)
+    return HTMLNode("blockquote", None, children, None)

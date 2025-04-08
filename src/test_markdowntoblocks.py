@@ -1,6 +1,6 @@
 import unittest
 
-from block import markdown_to_blocks, markdown_to_html_node
+from markdowntoblocks import markdown_to_blocks, markdown_to_html_node
 
 class TestExtractMarkdownText(unittest.TestCase):
     def test_markdown_to_blocks(self):

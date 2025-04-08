@@ -1,5 +1,6 @@
 import os
 import shutil
+from generatepage import generate_page_recursive
 
 def prepare_public_directory(public_dir):
     if os.path.exists(public_dir):
@@ -39,6 +40,11 @@ def main():
     files = map_static_files(static_dir, static_dir, public_dir)
 
     print("Copied files:", files)
+
+    dir_path_content = os.path.join(project_root, "content")
+    template_path = os.path.join(project_root, "template.html")
+    dest_dir_path = public_dir
+    generate_page_recursive(dir_path_content, template_path, dest_dir_path)
 
 if __name__ == "__main__":
     main()

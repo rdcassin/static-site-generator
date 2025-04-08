@@ -16,14 +16,14 @@ class TestExtractMarkdownText(unittest.TestCase):
         text2 = "Should not work."
         with self.assertRaises(Exception) as extract_text2 :
             extract_title(text2)
-        text_result2 = "Not header 1"
+        text_result2 = "No Title Found."
         text3 = "    # Salutations To All! ! !   "
         extract_text3 = extract_title(text3)
         text_result3 = "Salutations To All! ! !"
         text4 = "    ### Salutations   "
         with self.assertRaises(Exception) as extract_text4 :
             extract_title(text4)
-        text_result4 = "Not header 1"
+        text_result4 = "No Title Found."
         self.assertEqual(extract_text, text_result)
         self.assertEqual(str(extract_text2.exception), text_result2)
         self.assertEqual(extract_text3, text_result3)

@@ -1,7 +1,7 @@
 from enum import Enum
 from textnode import text_node_to_html_node
 from splitnodes import text_to_textnodes
-from htmlnode import HTMLNode, LeafNode, ParentNode
+from htmlnode import LeafNode, ParentNode
 
 def markdown_to_blocks(markdown):
     markdown = markdown.strip()
@@ -43,7 +43,7 @@ def block_to_block_type(block):
     
     is_quote = True
     for line in lines:
-        if not line.startswith("> "):
+        if not line.startswith(">"):
             is_quote = False
             break
     if is_quote:

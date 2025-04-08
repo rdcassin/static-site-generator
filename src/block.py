@@ -43,7 +43,7 @@ def block_to_block_type(block):
     
     is_quote = True
     for line in lines:
-        if not line.startswith(">"):
+        if not line.startswith("> "):
             is_quote = False
             break
     if is_quote:
@@ -106,17 +106,17 @@ def text_to_children(text):
     return html_nodes
 
 def paragraph_to_html_node(block):
-    split_block = block.split("\n")
-    for item in split_block:
-        item.strip()
-    rejoined_block = " ".join(split_block)
-    children = text_to_children(rejoined_block)
+    lines = block.split("\n")
+    for line in lines:
+        line.strip()
+    clean_block = " ".join(lines)
+    children = text_to_children(clean_block)
     return ParentNode("p", children, None)
 
 def heading_to_html_node(block):
-    split_block = block.split()
+    line = block.split()
     level = 0
-    for char in split_block[0]:
+    for char in line[0]:
         if char == '#':
             level += 1
         else:
@@ -160,6 +160,6 @@ def quote_to_html_node(block):
         if line.strip():
             clean_line = line.lstrip("> ").strip()
             children.append(clean_line)
-    rejoined_block = " ".join(children)
-    child_nodes = text_to_children(rejoined_block)
+    clean_block = " ".join(children)
+    child_nodes = text_to_children(clean_block)
     return ParentNode("blockquote", child_nodes, None)

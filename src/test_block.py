@@ -63,10 +63,51 @@ class TestExtractMarkdownText(unittest.TestCase):
 
         node = markdown_to_html_node(md)
         html = node.to_html()
-        print(f"HTML: {html}")
         self.assertEqual(
             html,
             "<div><blockquote>This is a quote. This is a quote with <b>bolded</b> text. This is a quote with <i>italic</i> text.</blockquote></div>",
+        )
+
+    def test_heading(self):
+        md = """
+        # This is Heading 1 with **bolded** and _italic_ text.
+        """
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><h1>This is Heading 1 with <b>bolded</b> and <i>italic</i> text.</h1></div>",
+        )
+
+    def test_unordered_list(self):
+        md = """
+        - Item 1
+        - Item 2
+        - Item 3
+        - Item 4
+        """
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li></ul></div>",
+        )
+
+    def test_ordered_list(self):
+        md = """
+        1. Item 1
+        2. Item 2
+        3. Item 3
+        4. Item 4
+        """
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ol><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li></ol></div>",
         )
         
 if __name__ == "__main__":

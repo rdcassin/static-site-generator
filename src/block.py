@@ -91,13 +91,13 @@ def markdown_to_html_node(markdown):
         
         nodes.append(block_node)
     
-    parent_node = HTMLNode("div", None, nodes, None)
+    parent_node = ParentNode("div", nodes, None)
 
     return parent_node
 
 def text_to_children(text):
     text_nodes = text_to_textnodes(text)
-    
+
     html_nodes = []
     for text_node in text_nodes:
         html_node = text_node_to_html_node(text_node)
@@ -106,8 +106,12 @@ def text_to_children(text):
     return html_nodes
 
 def paragraph_to_html_node(block):
-    children = text_to_children(block)
-    return HTMLNode("p", None, children, None)
+    split_block = block.split("\n")
+    for item in split_block:
+        item.strip()
+    rejoined_block = " ".join(split_block)
+    children = text_to_children(rejoined_block)
+    return ParentNode("p", children, None)
 
 def heading_to_html_node(block):
     split_block = block.split()
@@ -121,12 +125,11 @@ def heading_to_html_node(block):
     content = block[level:].strip()
     
     children = text_to_children(content)
-    return HTMLNode(f"h{level}", None, children, None)
+    return ParentNode(f"h{level}", children, None)
 
 def code_to_html_node(block):
-    content = block.strip("`").strip()
-
-    return HTMLNode("pre", None, [HTMLNode("code", content, None, None)], None)
+    stripped_content = block.strip("`").lstrip("\n")
+    return ParentNode("pre", [LeafNode("code", stripped_content, None)], None)
 
 def unordered_list_to_html_node(block):
     items = block.split("\n")
@@ -135,9 +138,9 @@ def unordered_list_to_html_node(block):
         if item:
             stripped_item = item.lstrip("- ")
             content = text_to_children(stripped_item.strip())
-            child = HTMLNode("li", content, None, None)
+            child = ParentNode("li", content, None)
             children.append(child)
-    return HTMLNode("ul", None, children, None)
+    return ParentNode("ul", children, None)
 
 def ordered_list_to_html_node(block):
     items = block.split("\n")
@@ -146,9 +149,9 @@ def ordered_list_to_html_node(block):
         if item:
             split_item = item.split(" ", 1)
             content = text_to_children(split_item[1].strip())
-            child = HTMLNode("li", content, None, None)
+            child = ParentNode("li", content, None)
             children.append(child)
-    return HTMLNode("ol", None, children, None)
+    return ParentNode("ol", children, None)
 
 def quote_to_html_node(block):
     lines = block.split("\n")
@@ -156,7 +159,7 @@ def quote_to_html_node(block):
     for line in lines:
         if line.strip():
             clean_line = line.lstrip("> ").strip()
-            child_nodes = text_to_children(clean_line)
-            children.extend(child_nodes)
-
-    return HTMLNode("blockquote", None, children, None)
+            children.append(clean_line)
+    rejoined_block = " ".join(children)
+    child_nodes = text_to_children(rejoined_block)
+    return ParentNode("blockquote", child_nodes, None)

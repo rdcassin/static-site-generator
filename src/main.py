@@ -34,8 +34,7 @@ def main():
     else:
         basepath = "/"
 
-    project_root = basepath
-    # project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     static_dir = os.path.join(project_root, "static")
     # Uncomment the following line to use public directory.  Also change references from public_dir to basepath
     # public_dir = os.path.join(project_root, "public")
@@ -54,7 +53,7 @@ def main():
     dir_path_content = os.path.join(project_root, "content")
     template_path = os.path.join(project_root, "template.html")
     dest_dir_path = docs_dir
-    generate_page_recursive(dir_path_content, template_path, dest_dir_path, project_root)
+    generate_page_recursive(dir_path_content, template_path, dest_dir_path, basepath)
 
 if __name__ == "__main__":
     main()

@@ -12,8 +12,8 @@ def generate_page(from_path, template_path, dest_path, project_root):
     content_html = content_node.to_html()
     title = extract_title(content)
     template = template.replace("{{ Title }}", title)
-    # template = template.replace('href="/', f'href="{project_root}')
-    # template = template.replace('src="/', f'src="{project_root}')
+    template = template.replace('href="/', f'href="{project_root}')
+    template = template.replace('src="/', f'src="{project_root}')
     completed_template = template.replace("{{ Content }}", content_html)
     generate_dirs_and_file(dest_path, completed_template)
 

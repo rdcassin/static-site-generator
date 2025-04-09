@@ -3,7 +3,7 @@ import shutil
 import sys
 from generatepage import generate_page_recursive
 
-def prepare_public_directory(docs_dir):
+def prepare_page_directory(docs_dir):
     if os.path.exists(docs_dir):
         shutil.rmtree(docs_dir)
     os.mkdir(docs_dir)
@@ -29,16 +29,14 @@ def map_static_files(directory, static_dir, docs_dir):
     
 def main():
 
-    if sys.argv[0]:
-        basepath = sys.argv[0]
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
     else:
         basepath = "/"
 
-    # Used when using the main.sh script
-    # project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    project_root = os.path.dirname(os.path.dirname(basepath))
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     static_dir = os.path.join(project_root, "static")
-    # Used to create a public directory.  Uncomment line below and rename docs_dir to public_dir
+    # Uncomment the following line to use public directory.  Also change references from public_dir to basepath
     # public_dir = os.path.join(project_root, "public")
     docs_dir = os.path.join(project_root, "docs")
 
@@ -46,7 +44,7 @@ def main():
     # print("Static Directory:", static_dir)
     # print("Public Directory:", public_dir)
 
-    prepare_public_directory(docs_dir)
+    prepare_page_directory(docs_dir)
 
     files = map_static_files(static_dir, static_dir, docs_dir)
 

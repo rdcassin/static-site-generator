@@ -1,1 +1,1 @@
-python3 src/main.py "/rdcassin/"
+python3 src/main.py "/static-site-generator/"

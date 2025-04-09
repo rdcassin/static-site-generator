@@ -34,7 +34,8 @@ def main():
     else:
         basepath = "/"
 
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    project_root = basepath
+    # project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     static_dir = os.path.join(project_root, "static")
     # Uncomment the following line to use public directory.  Also change references from public_dir to basepath
     # public_dir = os.path.join(project_root, "public")

@@ -13,8 +13,8 @@ def generate_page(from_path, template_path, dest_path, project_root):
     title = extract_title(content)
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", content_html)
-    # template = template.replace('href="/', f'href="{project_root}')
-    # template = template.replace('src="/', f'src="{project_root}')
+    template = template.replace('href="/', f'href="{project_root}')
+    template = template.replace('src="/', f'src="{project_root}')
     generate_dirs_and_file(dest_path, template)
 
 def generate_dirs_and_file(dest_path, content_html):
